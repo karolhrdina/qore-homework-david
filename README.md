@@ -4,9 +4,12 @@ Implementation of Qore technologies homework
 ## How to run
 
 Simplest way is to use the wrapper script:
-`./run <input_csv> <db_name>`
+
+```
+./run <input_csv> <db_name>
 i.e.
-`./run ./example-products.csv qore_test`
+./run ./example-products.csv qore_test
+```
 
 ## Assignment
 
