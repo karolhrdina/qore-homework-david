@@ -86,26 +86,7 @@ try {
         "header_names" : True,
         "header_lines" : 1,
     };
-/*
-    hash csv_format = {
-        "headers" : (
-            "imei", "part_no", "customer_no", "delivery_date", "shipper_customer_no", "order_reference", "customer_name", "description"
-        ),
-        "fields" : {
-            "imei"                  :   "number",
-            "part_no"               :   "number",
-            "customer_no"           :   "number",
-            "delivery_date"         :   {"type" : "date", "format": "DD/MM/YYYY"},
-            "shipper_customer_no"   :   "number",
-            "order_reference"       :   "string",
-            "customer_name"         :   "string",
-            "description"           :   "string"
-        }
-    };
-#   Documentation says this should work `CsvIterator iterator (s, "UTF-8", csv_format, csv_opts);`
-#   i.e. 	constructor (Qore::InputStream input, string encoding="UTF-8", hash spec, hash opts),
-#   but it doesn't
-*/
+
     CsvIterator iterator (s, "UTF-8", csv_opts);
 
     Datasource ds ("pgsql:kj/1234@qore_test");
