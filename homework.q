@@ -108,12 +108,14 @@ try {
 */
     CsvIterator iterator (s, "UTF-8", csv_opts);
 
+    Datasource ds ("pgsql:kj/1234@qore_test");
+
     hash mapping_customers = {
         "cust_id" : ("sequence" : "customers_seq"),
         "cust_num" : "CustNmbr",
         "cust_name" : "CustomerName"
     };
-    Table customers (connection, "customers", {});
+    Table customers (ds, "customers", {});
     InboundTableMapper customers_mapper (customers, mapping_customers);
 
     
@@ -127,7 +129,7 @@ try {
         "delivery_date" : "Deldate",
         "order_reference" : "Orderref"
     };
-    Table customer_inventory (connection, "customer_inventory", {});
+    Table customer_inventory (ds, "customer_inventory", {});
     InboundTableMapper customer_inventory_mapper (customer_inventory, mapping_customer_inventory);
 
     hash records_to_insert; #   `CustNmbr` -> list of getRecord ()'s to be inserted
@@ -145,7 +147,7 @@ try {
     }
     if (verbose)
         printf ("Performing commit on `customers` to save changes.\n");
-    customers.commit ();
+#    customers.commit ();
 
     foreach string key in (keys records_to_insert) {
         for (int i = 0; i < elements records_to_insert {key}; i++) {
@@ -156,7 +158,8 @@ try {
     }
     if (verbose)
         printf ("Performing commit on `customer_inventory` to save changes.\n");
-    customer_inventory.commit ();
+#    customer_inventory.commit ();
+    ds.commit ();
 }
 catch (hash ex) {
     printf ("%s: %s: %s\n", get_ex_pos(ex), ex.err, ex.desc);
