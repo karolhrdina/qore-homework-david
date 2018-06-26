@@ -98,7 +98,6 @@ try {
     };
     Table customers (ds, "customers", {});
     InboundTableMapper customers_mapper (customers, mapping_customers);
-
     
     hash existing_customers = {};   #   `CustNmbr` -> inserted `cust_id`
     hash mapping_customer_inventory = {
@@ -113,33 +112,15 @@ try {
     Table customer_inventory (ds, "customer_inventory", {});
     InboundTableMapper customer_inventory_mapper (customer_inventory, mapping_customer_inventory);
 
-    hash records_to_insert; #   `CustNmbr` -> list of getRecord ()'s to be inserted
-                            #   into customer_inventory at a later time due to FK constraint
-
     while (iterator.next()) {
         if (!existing_customers {iterator.CustNmbr}) {
             if (verbose)
                 printf ("Inserting new customer no. '%d' into `customers`.\n", iterator.CustNmbr);
             hash rv = customers_mapper.insertRow (iterator.getRecord ());
             existing_customers {iterator.CustNmbr} = rv.cust_id;
-            records_to_insert {iterator.CustNmbr} = list ();
         }
-        push records_to_insert {iterator.CustNmbr}, iterator.getRecord ();
+        customer_inventory_mapper.insertRow (iterator.getRecord ());
     }
-    if (verbose)
-        printf ("Performing commit on `customers` to save changes.\n");
-#    customers.commit ();
-
-    foreach string key in (keys records_to_insert) {
-        for (int i = 0; i < elements records_to_insert {key}; i++) {
-            if (verbose)
-                printf ("Inserting new inventory item for customer no. '%d' into `customer_inventory`.\n", key);
-            customer_inventory_mapper.insertRow (records_to_insert {key}[i]);
-        }
-    }
-    if (verbose)
-        printf ("Performing commit on `customer_inventory` to save changes.\n");
-#    customer_inventory.commit ();
     ds.commit ();
 }
 catch (hash ex) {
