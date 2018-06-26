@@ -89,7 +89,7 @@ try {
 
     CsvIterator iterator (s, "UTF-8", csv_opts);
 
-    Datasource ds ("pgsql:kj/1234@qore_test");
+    Datasource ds (connection);
 
     hash mapping_customers = {
         "cust_id" : ("sequence" : "customers_seq"),
